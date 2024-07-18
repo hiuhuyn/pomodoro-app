@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pomodoro_focus/pages/home_screen.dart';
+import 'package:pomodoro_focus/views/screens/home_screen.dart';
 
 void main() {
   runApp(const MyApp());

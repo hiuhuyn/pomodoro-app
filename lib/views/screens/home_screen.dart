@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pomodoro_focus/pages/tasks_screen.dart';
+import 'package:pomodoro_focus/views/screens/tasks_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
