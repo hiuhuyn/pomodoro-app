@@ -134,6 +134,18 @@ class PomofocusPageModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void pauseTimer() {
+    _timer?.cancel();
+    _timer = null;
+    _isTimerRunning = false;
+    _isStopRunning = true;
+    notifyListeners();
+  }
+
+  void resumeTimer(BuildContext context) {
+    startTimer(isResumed: true, context);
+  }
+
   Future endTimer(BuildContext context) async {
     showDialog(
       context: context,
@@ -217,17 +229,6 @@ class PomofocusPageModel extends ChangeNotifier {
         }
       },
     );
-  }
-
-  void pauseTimer() {
-    _timer?.cancel();
-    _timer = null;
-    _isTimerRunning = false;
-    notifyListeners();
-  }
-
-  void resumeTimer(BuildContext context) {
-    startTimer(isResumed: true, context);
   }
 
   Future changeStausTodo(BuildContext context, Todo todo) async {
