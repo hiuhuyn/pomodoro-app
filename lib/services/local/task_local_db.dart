@@ -38,7 +38,21 @@ class TaskLocalDB extends AppSqliteDb {
     });
   }
 
-  Future<Task?> findById(int id) async {
+  Future<List<Task>> getByStatus(bool status) async {
+    final dbClient = await db;
+
+    final List<Map<String, dynamic>> maps = await dbClient!.query(
+      TABLE_NAME_TASK,
+      where: 'isCompleted = ?',
+      whereArgs: [status ? 1 : 0],
+    );
+
+    return List.generate(maps.length, (i) {
+      return Task.fromMap(maps[i]);
+    });
+  }
+
+  Future<Task?> getById(int id) async {
     final dbClient = await db;
 
     final List<Map<String, dynamic>> maps = await dbClient!.query(
@@ -53,7 +67,7 @@ class TaskLocalDB extends AppSqliteDb {
     return null;
   }
 
-  Future<List<Task>> findByTitle(String title) async {
+  Future<List<Task>> getByTitle(String title) async {
     final dbClient = await db;
 
     final List<Map<String, dynamic>> maps = await dbClient!.query(
@@ -69,11 +83,16 @@ class TaskLocalDB extends AppSqliteDb {
 
   Future<List<Task>> getByDate(DateTime date) async {
     final dbClient = await db;
+    final startOfDay = DateTime(date.year, date.month, date.day);
+    final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
 
     final List<Map<String, dynamic>> maps = await dbClient!.query(
       TABLE_NAME_TASK,
-      where: 'date(startDate) = ?',
-      whereArgs: [date.toIso8601String().split('T')[0]],
+      where: 'startDate >= ? AND startDate <= ?',
+      whereArgs: [
+        startOfDay.millisecondsSinceEpoch,
+        endOfDay.millisecondsSinceEpoch,
+      ],
     );
 
     return List.generate(maps.length, (i) {
@@ -84,9 +103,17 @@ class TaskLocalDB extends AppSqliteDb {
   Future<List<Task>> getByWeek(DateTime week) async {
     final dbClient = await db;
 
-    final List<Map<String, dynamic>> maps = await dbClient!.rawQuery(
-      'SELECT * FROM $TABLE_NAME_TASK WHERE strftime("%W", startDate) = strftime("%W", ?)',
-      [week.toIso8601String()],
+    final startOfWeek = week.subtract(Duration(days: week.weekday - 1));
+    final endOfWeek = startOfWeek
+        .add(const Duration(days: 7, hours: 23, minutes: 59, seconds: 59));
+
+    final List<Map<String, dynamic>> maps = await dbClient!.query(
+      TABLE_NAME_TASK,
+      where: 'startDate >= ? AND startDate <= ?',
+      whereArgs: [
+        startOfWeek.millisecondsSinceEpoch,
+        endOfWeek.millisecondsSinceEpoch,
+      ],
     );
 
     return List.generate(maps.length, (i) {
@@ -97,9 +124,16 @@ class TaskLocalDB extends AppSqliteDb {
   Future<List<Task>> getByMonth(DateTime month) async {
     final dbClient = await db;
 
-    final List<Map<String, dynamic>> maps = await dbClient!.rawQuery(
-      'SELECT * FROM $TABLE_NAME_TASK WHERE strftime("%m", startDate) = strftime("%m", ?)',
-      [month.toIso8601String()],
+    final startOfMonth = DateTime(month.year, month.month, 1);
+    final endOfMonth = DateTime(month.year, month.month + 1, 0, 23, 59, 59);
+
+    final List<Map<String, dynamic>> maps = await dbClient!.query(
+      TABLE_NAME_TASK,
+      where: 'startDate >= ? AND startDate <= ?',
+      whereArgs: [
+        startOfMonth.millisecondsSinceEpoch,
+        endOfMonth.millisecondsSinceEpoch,
+      ],
     );
 
     return List.generate(maps.length, (i) {

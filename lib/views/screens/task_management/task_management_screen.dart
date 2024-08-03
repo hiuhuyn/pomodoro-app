@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:pomodoro_focus/core/route/route_generate.dart';
 import 'package:pomodoro_focus/views/screens/task_management/task_management_screen_viewmodel.dart';
 import 'package:pomodoro_focus/views/widgets/task_item.dart';
-import '../../../model/task.dart';
 import 'package:provider/provider.dart';
 
 class TaskManagementScreen extends StatefulWidget {
@@ -15,6 +14,7 @@ class TaskManagementScreen extends StatefulWidget {
 }
 
 class _TaskManagementScreenState extends State<TaskManagementScreen> {
+  String filterName = "Tất cả";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,10 +44,80 @@ class _TaskManagementScreenState extends State<TaskManagementScreen> {
                   SizedBox(
                     width: 10,
                   ),
-                  Text("Search..."),
+                  Text("Tìm kiếm..."),
                 ],
               ),
             ),
+          ),
+          Row(
+            children: [
+              PopupMenuButton(
+                icon: const Icon(Icons.filter_list_outlined),
+                itemBuilder: (context) {
+                  return [
+                    const PopupMenuItem(
+                      value: 0,
+                      child: Text("Tất cả"),
+                    ),
+                    const PopupMenuItem(
+                      value: 1,
+                      child: Text("Chưa hoàn thành"),
+                    ),
+                    const PopupMenuItem(
+                      value: 2,
+                      child: Text("Đã hoàn thành"),
+                    ),
+                    const PopupMenuItem(
+                      value: 3,
+                      child: Text("Hôm nay"),
+                    ),
+                    const PopupMenuItem(
+                      value: 4,
+                      child: Text("Ngày mai"),
+                    ),
+                    const PopupMenuItem(
+                      value: 5,
+                      child: Text("Tuần này"),
+                    ),
+                    const PopupMenuItem(
+                      value: 6,
+                      child: Text("Tháng này"),
+                    ),
+                  ];
+                },
+                onSelected: (value) {
+                  setState(() {
+                    switch (value) {
+                      case 0:
+                        filterName = "Tất cả";
+                        break;
+                      case 1:
+                        filterName = "Chưa hoàn thành";
+                        break;
+                      case 2:
+                        filterName = "Đã hoàn thành";
+                        break;
+                      case 3:
+                        filterName = "Hôm nay";
+                        break;
+                      case 4:
+                        filterName = "Ngày mai";
+                        break;
+                      case 5:
+                        filterName = "Tuần này";
+                        break;
+                      case 6:
+                        filterName = "Tháng này";
+                        break;
+                    }
+                    context
+                        .read<TaskManagementScreenViewmodel>()
+                        .fetchTasks(context, filterType: value);
+                  });
+                },
+              ),
+              Text(filterName),
+            ],
           ),
           Expanded(
             child: RefreshIndicator(

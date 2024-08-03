@@ -8,6 +8,7 @@ class TaskManagementScreenViewmodel extends ChangeNotifier {
   TaskRepository taskRepository;
   TaskManagementScreenViewmodel(this.taskRepository);
   List<Task> tasks = [];
+
   Future<List<Todo>> findTodosByTask(BuildContext context, int idTask) async {
     try {
       return await taskRepository.getTodoByTaskId(idTask);
@@ -31,9 +32,39 @@ class TaskManagementScreenViewmodel extends ChangeNotifier {
     }
   }
 
-  Future fetchTasks(BuildContext context) async {
+  Future fetchTasks(BuildContext context, {int filterType = 0}) async {
     try {
-      tasks = await taskRepository.getAllTasks();
+      switch (filterType) {
+        case 0:
+          tasks = await taskRepository.getAllTasks();
+          break;
+        case 1:
+          // chưa hoàn thành
+          tasks = await taskRepository.getTasksByStatus(false);
+          break;
+        case 2:
+          // đã hoàn thành
+          tasks = await taskRepository.getTasksByStatus(true);
+          break;
+        case 3:
+          // hôm nay
+          tasks = await taskRepository.getTasksByDate(DateTime.now());
+          break;
+        case 4:
+          // ngày mai
+          DateTime now = DateTime.now();
+          DateTime tomorrow = now.copyWith(day: now.day + 1);
+          tasks = await taskRepository.getTasksByDate(tomorrow);
+          break;
+        case 5:
+          // tuần này
+          tasks = await taskRepository.getTasksByWeek(DateTime.now());
+          break;
+        case 6:
+          // tháng này
+          tasks = await taskRepository.getTasksByMonth(DateTime.now());
+          break;
+      }
       notifyListeners();
     } catch (e) {
       showDialog(
@@ -211,9 +242,10 @@ class TaskManagementScreenViewmodel extends ChangeNotifier {
       );
     }
   }
-  Future searchTaskByTitle(BuildContext context, String query) async{
+
+  Future searchTaskByTitle(BuildContext context, String query) async {
     try {
-      tasks = await taskRepository.findTasksByTitle(query);
+      tasks = await taskRepository.getTasksByTitle(query);
       notifyListeners();
     } catch (e) {
       showDialog(

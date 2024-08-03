@@ -10,7 +10,7 @@ class TaskRepository {
   final TodoLocalDB todoLocalDB;
 
   TaskRepository({
-     required this.taskLocalDB,
+    required this.taskLocalDB,
     required this.todoLocalDB,
   });
 
@@ -65,16 +65,20 @@ class TaskRepository {
     return await taskLocalDB.getAll();
   }
 
-  Future<Task?> findTaskById(int id) async {
-    Task? task = await taskLocalDB.findById(id);
+  Future<Task?> getTaskById(int id) async {
+    Task? task = await taskLocalDB.getById(id);
     if (task != null) {
       task.subTask = await todoLocalDB.getByTaskId(id);
     }
     return task;
   }
 
-  Future<List<Task>> findTasksByTitle(String title) async {
-    return await taskLocalDB.findByTitle(title);
+  Future<List<Task>> getTasksByStatus(bool status) async {
+    return await taskLocalDB.getByStatus(status);
+  }
+
+  Future<List<Task>> getTasksByTitle(String title) async {
+    return await taskLocalDB.getByTitle(title);
   }
 
   Future<List<Task>> getTasksByDate(DateTime date) async {
