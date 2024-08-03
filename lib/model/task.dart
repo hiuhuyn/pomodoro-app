@@ -17,7 +17,7 @@ class Task extends Equatable {
   int? id;
   String? title;
   String? description;
-  List<Todo>? subTask;
+  List<Todo> subTask = [];
   bool? isCompleted;
 
   // lặp lại
@@ -35,7 +35,7 @@ class Task extends Equatable {
     this.id,
     this.title,
     this.description,
-    this.subTask,
+    List<Todo>? subTask,
     this.isCompleted,
     this.repeatType = RepeatType.none,
     this.repeatDaysOfWeek,
@@ -44,7 +44,10 @@ class Task extends Equatable {
     this.endDate,
     this.focusTime,
     this.goalTime,
-  });
+  }) {
+    this.subTask = subTask ?? [];
+    isCompleted ??= false;
+  }
 
   @override
   List<Object?> get props => [
@@ -97,12 +100,12 @@ class Task extends Equatable {
       'id': id,
       'title': title,
       'description': description,
-      'isCompleted': isCompleted,
+      'isCompleted': isCompleted == true ? 1 : 0,
       'repeatType': repeatType.name,
       'repeatDaysOfWeek': repeatDaysOfWeek,
       'repeatDayOfMonth': repeatDayOfMonth,
       'startDate': startDate?.millisecondsSinceEpoch,
-      'dueDate': endDate?.millisecondsSinceEpoch,
+      'endDate': endDate?.millisecondsSinceEpoch,
       'focusTime': focusTime,
       'goalTime': goalTime,
     };
@@ -114,19 +117,19 @@ class Task extends Equatable {
       title: map['title'],
       description: map['description'],
       subTask: map['subTask'],
-      isCompleted: map['isCompleted'],
+      isCompleted: map['isCompleted'] == 1 ? true : false,
       repeatType: map['repeatType'] != null
           ? RepeatType.values.firstWhere(
               (element) => element.name == map['repeatType'],
             )
           : RepeatType.none,
-      repeatDaysOfWeek: List<int>.from(map['repeatDaysOfWeek']),
+      repeatDaysOfWeek: map['repeatDaysOfWeek'],
       repeatDayOfMonth: map['repeatDayOfMonth'],
       startDate: map['startDate'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['startDate'] as int)
           : null,
-      endDate: map['dueDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['dueDate'] as int)
+      endDate: map['endDate'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['endDate'] as int)
           : null,
       focusTime: map['focusTime'],
       goalTime: map['goalTime'],

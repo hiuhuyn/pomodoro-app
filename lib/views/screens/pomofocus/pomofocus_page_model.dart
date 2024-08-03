@@ -1,19 +1,24 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
+import '../../../model/task.dart';
+import '../../../model/todo.dart';
+import '../../../repositorys/repository_local.dart';
 import '../../widgets/form_select_paramaters_timer.dart';
 
 class PomofocusPageModel extends ChangeNotifier {
+  TaskRepository taskRepository;
+
   int _maxSeconds = 60; // 60 seconds
   int _pomodoroTime = 25; // thời gian cho 1 phiên tập trung
   int _currentSeconds = 0; // giây hiện tại
   int _currentMinutes = 25; // phút hiện tại
   int _pomodoroNumber = 1; // số pomodoro
-  int _currentPomodoroNumber = 1; // số pomodoro hiện tại
+  int _currentPomodoroNumber = 0; // số pomodoro hiện tại
   int _shortBreakTime = 5; // thời gian nghỉ ngắn
   int _shortBreakLimit = 4; // số lần nghỉ ngắn trước khi nghỉ dài
-  int _currentShortBreakTime = 5;
   int _longBreakTime = 15; // thời gian nghỉ dài
   int _totalTime = 0; // tổng thời gian
 
@@ -21,8 +26,11 @@ class PomofocusPageModel extends ChangeNotifier {
   bool _isTimerRunning = false;
   bool _isStopRunning = false;
 
+  bool _isBreak = false;
+
   bool get isTimeRunning => _isTimerRunning;
   bool get isStopRunning => _isStopRunning;
+  bool get isBreak => _isBreak;
 
   int get maxSeconds => _maxSeconds;
   int get pomodoroTime => _pomodoroTime;
@@ -30,13 +38,19 @@ class PomofocusPageModel extends ChangeNotifier {
   int get currentMinutes => _currentMinutes;
   int get pomodoroNumber => _pomodoroNumber;
   int get currentPomodoroNumber => _currentPomodoroNumber;
-  int get shortBreakTime => _shortBreakTime;
-  int get shortBreakLimit => _shortBreakLimit;
-  int get currentShortBreakTime => _currentShortBreakTime;
-  int get longBreakTime => _longBreakTime;
-  int get totalTime => _totalTime;
+  int get breakTime {
+    // xử lý thời gian nghỉ (ngắn hoặc dài)
+    if (_currentPomodoroNumber % _shortBreakLimit == 0) {
+      return _longBreakTime;
+    }
+    return _shortBreakTime;
+  }
 
-  PomofocusPageModel() {
+  int get shortBreakLimit => _shortBreakLimit;
+  int get totalTime => _totalTime;
+  Task? task;
+
+  PomofocusPageModel(this.task, this.taskRepository) {
     _currentMinutes = pomodoroTime;
     _currentSeconds = 0;
   }
@@ -50,7 +64,6 @@ class PomofocusPageModel extends ChangeNotifier {
     int? currentPomodoroNumber,
     int? shortBreakTime,
     int? shortBreakLimit,
-    int? currentShortBreakTime,
     int? longBreakTime,
     int? totalTime,
   }) {
@@ -59,28 +72,34 @@ class PomofocusPageModel extends ChangeNotifier {
     _currentSeconds = currentSeconds ?? this.currentSeconds;
     _currentMinutes = currentMinutes ?? this.pomodoroTime;
     _pomodoroNumber = pomodoroNumber ?? this.pomodoroNumber;
-    _currentPomodoroNumber = currentPomodoroNumber ?? this.pomodoroNumber;
-    _shortBreakTime = shortBreakTime ?? this.shortBreakTime;
+    _currentPomodoroNumber = currentPomodoroNumber ?? 0;
+    _shortBreakTime = shortBreakTime ?? _shortBreakTime;
     _shortBreakLimit = shortBreakLimit ?? this.shortBreakLimit;
-    _currentShortBreakTime = currentShortBreakTime ?? this.shortBreakTime;
-    _longBreakTime = longBreakTime ?? this.longBreakTime;
+    _longBreakTime = longBreakTime ?? _longBreakTime;
     _totalTime = totalTime ?? this.totalTime;
     notifyListeners();
   }
 
-  startTimer({bool isResumed = false}) {
+  startTimer(BuildContext context, {bool isResumed = false}) {
     _isTimerRunning = true;
     _isStopRunning = isResumed;
     if (!isResumed) {
-      _currentMinutes = pomodoroTime - 1;
+      if (_isBreak) {
+        _currentMinutes = breakTime - 1;
+      } else {
+        _currentMinutes = pomodoroTime - 1;
+      }
       _currentSeconds = maxSeconds;
     }
     notifyListeners();
     _timer = Timer.periodic(
-      const Duration(milliseconds: 200),
+      const Duration(milliseconds: 100),
       (timer) {
         if (currentSeconds == 0) {
           if (currentMinutes == 0) {
+            if (!isBreak) {
+              _saveFocusTime(context);
+            }
             stopTimer(reset: true);
           } else {
             _currentSeconds = maxSeconds;
@@ -100,11 +119,66 @@ class PomofocusPageModel extends ChangeNotifier {
     _isTimerRunning = false;
     _isStopRunning = true;
     if (reset) {
-      _currentMinutes = pomodoroTime;
       _currentSeconds = 0;
       _isStopRunning = false;
+      _isBreak = !_isBreak;
+      if (_isBreak) {
+        _currentMinutes = breakTime;
+      } else {
+        _currentMinutes = pomodoroTime;
+      }
     }
     notifyListeners();
+  }
+
+  Future endTimer(BuildContext context) async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Bạn có chắc muốn kết thúc đếm thời gian?"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text("Hủy"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context, "ok");
+            },
+            child: const Text("Đồng ý"),
+          ),
+        ],
+      ),
+    ).then(
+      (value) {
+        if (value == "ok") {
+          if (!_isBreak) {
+            _saveFocusTime(context);
+            _currentPomodoroNumber++;
+          }
+          stopTimer(reset: true);
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("Kết thúc phiên")));
+        }
+      },
+    );
+    notifyListeners();
+  }
+
+  Future _saveFocusTime(BuildContext context) async {
+    if (task != null) {
+      try {
+        int focusTime = _pomodoroTime - currentMinutes;
+        focusTime += task?.focusTime ?? 0;
+        task?.focusTime = focusTime;
+        await taskRepository.updateTask(task!);
+      } catch (e) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Lỗi lưu thời gian: $e")));
+      }
+    }
   }
 
   Future selectParametersTimer(BuildContext context) async {
@@ -135,10 +209,33 @@ class PomofocusPageModel extends ChangeNotifier {
             totalTime: value['totalTime'],
             pomodoroNumber: value['pomodoroNumber'],
             currentSeconds: 0,
+            currentPomodoroNumber: 0,
           );
         }
       },
     );
+  }
+
+  void pauseTimer() {
+    _timer?.cancel();
+    _timer = null;
+    _isTimerRunning = false;
+    notifyListeners();
+  }
+
+  void resumeTimer(BuildContext context) {
+    startTimer(isResumed: true, context);
+  }
+
+  Future changeStausTodo(BuildContext context, Todo todo) async {
+    if (task != null) {
+      try {
+        await taskRepository.updateTodo(todo);
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Lỗi thay đổi trạng thái: $e")));
+      }
+    }
   }
 
   @override

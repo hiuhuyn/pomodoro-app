@@ -38,7 +38,7 @@ class Todo extends Equatable {
     return <String, dynamic>{
       'id': id,
       'title': title,
-      'completed': completed,
+      'completed': completed == true ? 1 : 0,
       'idTask': idTask,
     };
   }
@@ -47,7 +47,7 @@ class Todo extends Equatable {
     return Todo(
       id: map['id'],
       title: map['title'],
-      completed: map['completed'],
+      completed: map['completed'] == 1 ? true : false,
       idTask: map['idTask'],
     );
   }

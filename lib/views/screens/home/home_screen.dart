@@ -1,6 +1,8 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:pomodoro_focus/views/screens/task_management/task_management_screen.dart';
+import 'package:pomodoro_focus/views/screens/task_management/task_management_screen_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,6 +14,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _pageController = PageController();
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
+  @override
+  void initState() {
+    super.initState();
+    context.read<TaskManagementScreenViewmodel>().fetchTasks(context);
+  }
 
   @override
   Widget build(BuildContext context) {
