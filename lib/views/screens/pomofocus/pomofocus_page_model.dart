@@ -97,10 +97,13 @@ class PomofocusPageModel extends ChangeNotifier {
       (timer) {
         if (currentSeconds == 0) {
           if (currentMinutes == 0) {
-            if (!isBreak) {
+            if (!_isBreak) {
               _saveFocusTime(context);
+              _currentPomodoroNumber++;
             }
             stopTimer(reset: true);
+            ScaffoldMessenger.of(context)
+                .showSnackBar(const SnackBar(content: Text("Kết thúc phiên")));
           } else {
             _currentSeconds = maxSeconds;
             _currentMinutes--;

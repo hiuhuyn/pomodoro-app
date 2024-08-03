@@ -1,6 +1,8 @@
-String formatDate(DateTime? date) {
+String formatDate(DateTime? date, {bool isYear = false}) {
   if (date == null) return '';
-
+  if (isYear) {
+    return '${date.day}/${date.month}/${date.year}';
+  }
   return '${date.day}/${date.month}';
 }
 

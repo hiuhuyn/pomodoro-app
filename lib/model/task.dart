@@ -18,7 +18,7 @@ class Task extends Equatable {
   String? title;
   String? description;
   List<Todo> subTask = [];
-  bool? isCompleted;
+  bool isCompleted;
 
   // lặp lại
   RepeatType repeatType;
@@ -29,24 +29,23 @@ class Task extends Equatable {
   DateTime? startDate; // ngày bắt đầu
   DateTime? endDate; // ngày hết hạn
 
-  int? focusTime; // Thời gian tập chung
-  int? goalTime;
+  int focusTime; // Thời gian tập chung
+  int goalTime;
   Task({
     this.id,
     this.title,
     this.description,
     List<Todo>? subTask,
-    this.isCompleted,
+    this.isCompleted = false,
     this.repeatType = RepeatType.none,
     this.repeatDaysOfWeek,
     this.repeatDayOfMonth,
     this.startDate,
     this.endDate,
-    this.focusTime,
-    this.goalTime,
+    this.focusTime = 0,
+    this.goalTime = 0,
   }) {
     this.subTask = subTask ?? [];
-    isCompleted ??= false;
   }
 
   @override
@@ -131,8 +130,8 @@ class Task extends Equatable {
       endDate: map['endDate'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['endDate'] as int)
           : null,
-      focusTime: map['focusTime'],
-      goalTime: map['goalTime'],
+      focusTime: map['focusTime'] ?? 0,
+      goalTime: map['goalTime'] ?? 0,
     );
   }
 
