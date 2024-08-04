@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
@@ -190,6 +189,7 @@ class PomofocusPageModel extends ChangeNotifier {
         task?.focusTime = focusTime;
         await taskRepository.updateTask(task!);
       } catch (e) {
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("Lỗi lưu thời gian: $e")));
       }

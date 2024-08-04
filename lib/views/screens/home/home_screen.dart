@@ -1,4 +1,3 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:pomodoro_focus/views/screens/statistics_screen/statistics_screen.dart';
 import 'package:pomodoro_focus/views/screens/task_management/task_management_screen.dart';

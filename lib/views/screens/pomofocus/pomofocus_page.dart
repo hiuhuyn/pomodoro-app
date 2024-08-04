@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pomodoro_focus/model/todo.dart';
 import 'package:pomodoro_focus/views/screens/pomofocus/pomofocus_page_model.dart';
 import 'package:pomodoro_focus/views/screens/task_management/task_management_screen_viewmodel.dart';
 import 'package:pomodoro_focus/views/widgets/todo_item.dart';
@@ -7,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../../model/task.dart';
 
+// ignore: must_be_immutable
 class PomofocusScreen extends StatefulWidget {
   PomofocusScreen({super.key, this.task});
   Task? task;

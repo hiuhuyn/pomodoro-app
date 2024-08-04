@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../model/task.dart';
 
+// ignore: must_be_immutable
 class DialogSetRepeatTask extends StatefulWidget {
   DialogSetRepeatTask({super.key, required this.task, required this.onSave});
   Task task;
@@ -128,7 +129,7 @@ class _DialogSetRepeatTaskState extends State<DialogSetRepeatTask> {
               ],
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           buildContent(),
         ],
       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/unit.dart';
 
+// ignore: must_be_immutable
 class FormSelectParamatersTimer extends StatefulWidget {
   FormSelectParamatersTimer(
       {super.key,

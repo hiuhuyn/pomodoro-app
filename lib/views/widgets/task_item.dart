@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:pomodoro_focus/core/route/route_generate.dart';
 import 'package:pomodoro_focus/views/screens/task_management/task_management_screen_viewmodel.dart';
-import 'package:provider/provider.dart';
+
 import '../../core/unit.dart';
 import '../../model/task.dart';
 
@@ -47,7 +49,7 @@ class _TaskItemState extends State<TaskItem> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0),
               ),
-              value: widget.task.isCompleted ?? false,
+              value: widget.task.isCompleted,
               onChanged: (value) {
                 setState(() {
                   widget.task.isCompleted = value ?? false;

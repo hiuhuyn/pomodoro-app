@@ -4,6 +4,7 @@ import '../../model/todo.dart';
 
 enum ShowType { show, edit }
 
+// ignore: must_be_immutable
 class TodoItem extends StatefulWidget {
   TodoItem._(
       {required this.todo,

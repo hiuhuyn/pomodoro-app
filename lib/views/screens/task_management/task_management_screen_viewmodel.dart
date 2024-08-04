@@ -171,7 +171,7 @@ class TaskManagementScreenViewmodel extends ChangeNotifier {
     try {
       tasks = tasks
           .map((task) => task.id == taskId
-              ? task.copyWith(isCompleted: !task.isCompleted!)
+              ? task.copyWith(isCompleted: !task.isCompleted)
               : task)
           .toList();
       await taskRepository

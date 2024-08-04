@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:pomodoro_focus/core/route/route_generate.dart';
 import 'package:pomodoro_focus/views/screens/task_management/task_management_screen_viewmodel.dart';
@@ -100,7 +98,6 @@ class _TaskManagementScreenState extends State<TaskManagementScreen> {
           Expanded(
             child: RefreshIndicator(
               onRefresh: () {
-                log("onRefresh");
                 return context
                     .read<TaskManagementScreenViewmodel>()
                     .fetchTasks(context, filterType: filterType);

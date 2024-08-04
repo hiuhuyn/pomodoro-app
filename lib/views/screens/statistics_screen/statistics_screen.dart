@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pomodoro_focus/views/screens/statistics_screen/chart/chart_week_statistics.dart';
 import 'package:pomodoro_focus/views/screens/statistics_screen/statistics_screen_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +18,20 @@ class StatisticsScreen extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  "Báo cáo thống kê",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineSmall
+                      ?.copyWith(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                value.allTime,
                 const SizedBox(
                   height: 20,
                 ),

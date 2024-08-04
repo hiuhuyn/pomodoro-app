@@ -21,9 +21,131 @@ class StatisticsScreenViewModel extends ChangeNotifier {
   Widget get allTime => _allTime;
 
   void fetchData(DateTime date, BuildContext context) {
+    updateAllTime(context);
     updateChartToday(context);
     updateChartWeek(date, context);
     updateChartMonth(date, context);
+  }
+
+  Future<void> updateAllTime(BuildContext context) async {
+    try {
+      final List<Task> tasks = await taskRepository.getAllTasks();
+      final double focusTime =
+          tasks.fold(0.0, (sum, task) => sum + task.focusTime);
+      final int completedTasks = tasks.where((task) => task.isCompleted).length;
+      final int pendingTasks = tasks.where((task) => !task.isCompleted).length;
+
+      _allTime = Container(
+        padding: const EdgeInsets.all(8),
+        width: double.infinity,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            boxShadow: [
+              BoxShadow(
+                offset: const Offset(2.0, 2.0),
+                color: Colors.black.withOpacity(0.2),
+                blurRadius: 2.0,
+              ),
+              BoxShadow(
+                offset: const Offset(-2.0, -2.0),
+                color: Colors.black.withOpacity(0.2),
+                blurRadius: 2.0,
+              ),
+            ]),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Tất cả",
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.blue[50],
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          completedTasks.toString(),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineLarge
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                        const Text(
+                          'Đã hoàn thành',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.blue[50],
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          pendingTasks.toString(),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineLarge
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                        const Text(
+                          'Chưa hoàn thành',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Text('Tập trung: $focusTime phút'),
+          ],
+        ),
+      );
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: Text('Could not fetch data from the server: $e'),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            )
+          ],
+        ),
+      );
+    }
   }
 
   void updateChartWeek(DateTime date, BuildContext context) async {
@@ -115,12 +237,12 @@ class StatisticsScreenViewModel extends ChangeNotifier {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Error'),
+          title: const Text('Error'),
           content: Text('Could not fetch data from the server: $e'),
           actions: <Widget>[
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
+              child: const Text('OK'),
             )
           ],
         ),
@@ -141,7 +263,7 @@ class StatisticsScreenViewModel extends ChangeNotifier {
       int totalUncompletedTasks = 0;
 
       for (var i in result) {
-        totalFocusTime += i.focusTime ?? 0;
+        totalFocusTime += i.focusTime;
         totalCompletedTasks += i.isCompleted ? 1 : 0;
         totalUncompletedTasks += i.isCompleted ? 0 : 1;
       }
