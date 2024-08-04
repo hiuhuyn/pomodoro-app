@@ -14,7 +14,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _pageController = PageController();
-  final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
+  // final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
   @override
   void initState() {
     super.initState();
@@ -26,32 +26,32 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: SafeArea(
         child: PageView(
-          onPageChanged: (value) {
-            final CurvedNavigationBarState? navBarState =
-                _bottomNavigationKey.currentState;
-            navBarState?.setPage(value);
-          },
+          // onPageChanged: (value) {
+          //   final CurvedNavigationBarState? navBarState =
+          //       _bottomNavigationKey.currentState;
+          //   navBarState?.setPage(value);
+          // },
           controller: _pageController,
-          children: [
-            const TaskManagementScreen(),
+          children: const [
+            TaskManagementScreen(),
             StatisticsScreen(),
           ],
         ),
       ),
-      bottomNavigationBar: CurvedNavigationBar(
-        key: _bottomNavigationKey,
-        backgroundColor: Colors.white,
-        items: const [
-          Icon(Icons.list_sharp, size: 30),
-          Icon(Icons.bar_chart_sharp, size: 30),
-        ],
-        animationDuration: const Duration(milliseconds: 200),
-        onTap: (index) {
-          _pageController.animateToPage(index,
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.linear);
-        },
-      ),
+      // bottomNavigationBar: CurvedNavigationBar(
+      //   key: _bottomNavigationKey,
+      //   backgroundColor: Colors.white,
+      //   items: const [
+      //     Icon(Icons.list_sharp, size: 30),
+      //     Icon(Icons.bar_chart_sharp, size: 30),
+      //   ],
+      //   animationDuration: const Duration(milliseconds: 200),
+      //   onTap: (index) {
+      //     _pageController.animateToPage(index,
+      //         duration: const Duration(milliseconds: 200),
+      //         curve: Curves.linear);
+      //   },
+      // ),
     );
   }
 }

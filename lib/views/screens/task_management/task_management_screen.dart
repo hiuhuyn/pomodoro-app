@@ -14,7 +14,7 @@ class TaskManagementScreen extends StatefulWidget {
 }
 
 class _TaskManagementScreenState extends State<TaskManagementScreen> {
-  String filterName = "Tất cả";
+  int filterType = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,36 +87,14 @@ class _TaskManagementScreenState extends State<TaskManagementScreen> {
                 },
                 onSelected: (value) {
                   setState(() {
-                    switch (value) {
-                      case 0:
-                        filterName = "Tất cả";
-                        break;
-                      case 1:
-                        filterName = "Chưa hoàn thành";
-                        break;
-                      case 2:
-                        filterName = "Đã hoàn thành";
-                        break;
-                      case 3:
-                        filterName = "Hôm nay";
-                        break;
-                      case 4:
-                        filterName = "Ngày mai";
-                        break;
-                      case 5:
-                        filterName = "Tuần này";
-                        break;
-                      case 6:
-                        filterName = "Tháng này";
-                        break;
-                    }
+                    filterType = value;
                     context
                         .read<TaskManagementScreenViewmodel>()
-                        .fetchTasks(context, filterType: value);
+                        .fetchTasks(context, filterType: filterType);
                   });
                 },
               ),
-              Text(filterName),
+              filterTypeWidget()
             ],
           ),
           Expanded(
@@ -125,7 +103,7 @@ class _TaskManagementScreenState extends State<TaskManagementScreen> {
                 log("onRefresh");
                 return context
                     .read<TaskManagementScreenViewmodel>()
-                    .fetchTasks(context);
+                    .fetchTasks(context, filterType: filterType);
               },
               child: Consumer<TaskManagementScreenViewmodel>(
                 builder: (context, value, child) {
@@ -157,5 +135,33 @@ class _TaskManagementScreenState extends State<TaskManagementScreen> {
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  Widget filterTypeWidget() {
+    String filterName = "Tất cả";
+    switch (filterType) {
+      case 0:
+        filterName = "Tất cả";
+        break;
+      case 1:
+        filterName = "Chưa hoàn thành";
+        break;
+      case 2:
+        filterName = "Đã hoàn thành";
+        break;
+      case 3:
+        filterName = "Hôm nay";
+        break;
+      case 4:
+        filterName = "Ngày mai";
+        break;
+      case 5:
+        filterName = "Tuần này";
+        break;
+      case 6:
+        filterName = "Tháng này";
+        break;
+    }
+    return Text(filterName);
   }
 }
