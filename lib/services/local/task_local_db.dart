@@ -104,15 +104,22 @@ class TaskLocalDB extends AppSqliteDb {
     final dbClient = await db;
 
     final startOfWeek = week.subtract(Duration(days: week.weekday - 1));
-    final endOfWeek = startOfWeek
-        .add(const Duration(days: 7, hours: 23, minutes: 59, seconds: 59));
+    // final endOfWeek = startOfWeek
+    //     .add(const Duration(days: 7, hours: 23, minutes: 59, seconds: 59));
+    final endOfWeek = startOfWeek.add(const Duration(days: 6));
+
+    // Đặt thời gian của ngày bắt đầu và kết thúc tuần về 00:00:00 để so sánh dễ dàng hơn
+    final startOfWeekDate =
+        DateTime(startOfWeek.year, startOfWeek.month, startOfWeek.day);
+    final endOfWeekDate =
+        DateTime(endOfWeek.year, endOfWeek.month, endOfWeek.day, 23, 59, 59);
 
     final List<Map<String, dynamic>> maps = await dbClient!.query(
       TABLE_NAME_TASK,
       where: 'startDate >= ? AND startDate <= ?',
       whereArgs: [
-        startOfWeek.millisecondsSinceEpoch,
-        endOfWeek.millisecondsSinceEpoch,
+        startOfWeekDate.millisecondsSinceEpoch,
+        endOfWeekDate.millisecondsSinceEpoch,
       ],
     );
 
