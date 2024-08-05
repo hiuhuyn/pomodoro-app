@@ -133,7 +133,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                         },
                         leading: const Icon(Icons.golf_course_sharp),
                         title: Text(
-                          "Mục tiêu (phút) ${formatMinutesToHHMM(widget.task.goalTime)}",
+                          "Mục tiêu ${formatMinutesToHHMM(widget.task.goalTime)}",
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -154,7 +154,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                                     }
                                   });
                                 },
-                                maxLength: 10,
+                                maxLength: 5,
                                 decoration: const InputDecoration(
                                   hintText:
                                       'Nhập thời gian mục tiêu của bạn...',
@@ -234,13 +234,13 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                           });
                         },
                         leading: const Icon(Icons.note_outlined),
-                        title: const Text("Ghi chú"),
+                        title: const Text("Mô tả"),
                         subtitle: isClickInputDesc
                             ? TextFormField(
                                 controller: widget.descriptionController,
                                 maxLines: null,
                                 decoration: const InputDecoration(
-                                  hintText: 'Nhập ghi chú về công việc...',
+                                  hintText: 'Nhập mô tả về công việc...',
                                   enabledBorder: InputBorder.none,
                                   focusedBorder: InputBorder.none,
                                   errorBorder: InputBorder.none,
