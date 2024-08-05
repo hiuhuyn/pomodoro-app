@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pomodoro_focus/views/screens/statistics_screen/statistics_screen_viewmodel.dart';
+import 'package:pomodoro_focus/views/screens/statistics/statistics_screen_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class StatisticsScreen extends StatelessWidget {

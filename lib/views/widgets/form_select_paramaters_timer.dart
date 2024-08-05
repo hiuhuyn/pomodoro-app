@@ -44,144 +44,182 @@ class _FormSelectParamatersTimerState extends State<FormSelectParamatersTimer> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Tùy chỉnh thông số cho đồng hồ Pomodoro"),
+      scrollable: false,
+      title: const Text("Thông số cho đồng hồ Pomodoro"),
       content: Center(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ListTile(
-              title: const Text("Thời gian cho 1 Pomodoro"),
-              subtitle: DropdownButton(
-                underline: const SizedBox(),
-                value: pomodoroTimer,
-                isExpanded: true,
-                items: const [
-                  DropdownMenuItem(value: 1, child: Text("1 phút")),
-                  DropdownMenuItem(value: 2, child: Text("2 phút")),
-                  DropdownMenuItem(value: 5, child: Text("5 phút")),
-                  DropdownMenuItem(value: 10, child: Text("10 phút")),
-                  DropdownMenuItem(value: 15, child: Text("15 phút")),
-                  DropdownMenuItem(value: 25, child: Text("25 phút")),
-                  DropdownMenuItem(value: 30, child: Text("30 phút")),
-                  DropdownMenuItem(value: 45, child: Text("45 phút")),
-                  DropdownMenuItem(value: 60, child: Text("60 phút")),
-                ],
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      pomodoroTimer = value;
-                    });
-                  }
-                },
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListTile(
+                      title: const Text("Thời gian 1 Pomodoro"),
+                      subtitle: DropdownButton(
+                        underline: const SizedBox(),
+                        value: pomodoroTimer,
+                        isExpanded: true,
+                        items: const [
+                          DropdownMenuItem(value: 1, child: Text("1 phút")),
+                          DropdownMenuItem(value: 2, child: Text("2 phút")),
+                          DropdownMenuItem(value: 3, child: Text("3 phút")),
+                          DropdownMenuItem(value: 5, child: Text("5 phút")),
+                          DropdownMenuItem(value: 10, child: Text("10 phút")),
+                          DropdownMenuItem(value: 15, child: Text("15 phút")),
+                          DropdownMenuItem(value: 25, child: Text("25 phút")),
+                          DropdownMenuItem(value: 30, child: Text("30 phút")),
+                          DropdownMenuItem(value: 45, child: Text("45 phút")),
+                          DropdownMenuItem(value: 60, child: Text("60 phút")),
+                        ],
+                        onChanged: (value) {
+                          if (value != null) {
+                            setState(() {
+                              pomodoroTimer = value;
+                            });
+                          }
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: Text(
+                          "Số Pomodoro ($pomodoroTimer x $pomorodoNumber = ${pomodoroTimer * pomorodoNumber} phút)"),
+                      subtitle: Slider(
+                        label: "$pomorodoNumber",
+                        value: pomorodoNumber.toDouble(),
+                        max: 100,
+                        min: 1,
+                        divisions: 100,
+                        onChanged: (value) {
+                          setState(() {
+                            pomorodoNumber = value.toInt();
+                          });
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text("Thời gian nghỉ ngắn"),
+                      subtitle: DropdownButton(
+                        underline: const SizedBox(),
+                        value: shortBreakTime,
+                        isExpanded: true,
+                        items: const [
+                          DropdownMenuItem(value: 1, child: Text("1 phút")),
+                          DropdownMenuItem(value: 2, child: Text("2 phút")),
+                          DropdownMenuItem(value: 3, child: Text("3 phút")),
+                          DropdownMenuItem(value: 5, child: Text("5 phút")),
+                          DropdownMenuItem(value: 10, child: Text("10 phút")),
+                          DropdownMenuItem(value: 15, child: Text("15 phút")),
+                          DropdownMenuItem(value: 25, child: Text("25 phút")),
+                          DropdownMenuItem(value: 30, child: Text("30 phút")),
+                          DropdownMenuItem(value: 45, child: Text("45 phút")),
+                          DropdownMenuItem(value: 60, child: Text("60 phút")),
+                        ],
+                        onChanged: (value) {
+                          if (value != null) {
+                            setState(() {
+                              shortBreakTime = value;
+                            });
+                          }
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text("Thời gian nghỉ dài"),
+                      subtitle: DropdownButton(
+                        underline: const SizedBox(),
+                        value: longBreakTime,
+                        isExpanded: true,
+                        items: const [
+                          DropdownMenuItem(value: 1, child: Text("1 phút")),
+                          DropdownMenuItem(value: 2, child: Text("2 phút")),
+                          DropdownMenuItem(value: 5, child: Text("5 phút")),
+                          DropdownMenuItem(value: 10, child: Text("10 phút")),
+                          DropdownMenuItem(value: 15, child: Text("15 phút")),
+                          DropdownMenuItem(value: 25, child: Text("25 phút")),
+                          DropdownMenuItem(value: 30, child: Text("30 phút")),
+                          DropdownMenuItem(value: 45, child: Text("45 phút")),
+                          DropdownMenuItem(value: 60, child: Text("60 phút")),
+                        ],
+                        onChanged: (value) {
+                          if (value != null) {
+                            setState(() {
+                              longBreakTime = value;
+                            });
+                          }
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title:
+                          const Text("Số lần nghỉ ngắn trước khi đến nghỉ dài"),
+                      subtitle: DropdownButton(
+                        underline: const SizedBox(),
+                        value: shortBreakLimit,
+                        isExpanded: true,
+                        items: const [
+                          DropdownMenuItem(value: 1, child: Text("1 lần")),
+                          DropdownMenuItem(value: 2, child: Text("2 lần")),
+                          DropdownMenuItem(value: 3, child: Text("3 lần")),
+                          DropdownMenuItem(value: 4, child: Text("4 lần")),
+                        ],
+                        onChanged: (value) {
+                          if (value != null) {
+                            setState(() {
+                              shortBreakLimit = value;
+                            });
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-            ListTile(
-              title: Text(
-                  "Số Pomodoro ($pomodoroTimer x $pomorodoNumber = ${pomodoroTimer * pomorodoNumber} phút)"),
-              subtitle: Slider(
-                label: "$pomorodoNumber",
-                value: pomorodoNumber.toDouble(),
-                max: 100,
-                min: 1,
-                divisions: 100,
-                onChanged: (value) {
-                  setState(() {
-                    pomorodoNumber = value.toInt();
-                  });
-                },
-              ),
-            ),
-            ListTile(
-              title: const Text("Thời gian nghỉ ngắn"),
-              subtitle: DropdownButton(
-                underline: const SizedBox(),
-                value: shortBreakTime,
-                isExpanded: true,
-                items: const [
-                  DropdownMenuItem(value: 1, child: Text("1 phút")),
-                  DropdownMenuItem(value: 2, child: Text("2 phút")),
-                  DropdownMenuItem(value: 5, child: Text("5 phút")),
-                  DropdownMenuItem(value: 10, child: Text("10 phút")),
-                  DropdownMenuItem(value: 15, child: Text("15 phút")),
-                  DropdownMenuItem(value: 25, child: Text("25 phút")),
-                  DropdownMenuItem(value: 30, child: Text("30 phút")),
-                  DropdownMenuItem(value: 45, child: Text("45 phút")),
-                  DropdownMenuItem(value: 60, child: Text("60 phút")),
-                ],
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      shortBreakTime = value;
-                    });
-                  }
-                },
-              ),
-            ),
-            ListTile(
-              title: const Text("Thời gian nghỉ dài"),
-              subtitle: DropdownButton(
-                underline: const SizedBox(),
-                value: longBreakTime,
-                isExpanded: true,
-                items: const [
-                  DropdownMenuItem(value: 1, child: Text("1 phút")),
-                  DropdownMenuItem(value: 2, child: Text("2 phút")),
-                  DropdownMenuItem(value: 5, child: Text("5 phút")),
-                  DropdownMenuItem(value: 10, child: Text("10 phút")),
-                  DropdownMenuItem(value: 15, child: Text("15 phút")),
-                  DropdownMenuItem(value: 25, child: Text("25 phút")),
-                  DropdownMenuItem(value: 30, child: Text("30 phút")),
-                  DropdownMenuItem(value: 45, child: Text("45 phút")),
-                  DropdownMenuItem(value: 60, child: Text("60 phút")),
-                ],
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      longBreakTime = value;
-                    });
-                  }
-                },
-              ),
-            ),
-            ListTile(
-              title: const Text("Số lần nghỉ ngắn trước khi đến nghỉ dài"),
-              subtitle: DropdownButton(
-                underline: const SizedBox(),
-                value: shortBreakLimit,
-                isExpanded: true,
-                items: const [
-                  DropdownMenuItem(value: 1, child: Text("1 lần")),
-                  DropdownMenuItem(value: 2, child: Text("2 lần")),
-                  DropdownMenuItem(value: 3, child: Text("3 lần")),
-                  DropdownMenuItem(value: 4, child: Text("4 lần")),
-                ],
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      shortBreakLimit = value;
-                    });
-                  }
-                },
-              ),
+            Column(
+              children: [
+                Center(
+                  child: Text(
+                    "Tổng thời gian: ${formatMinutesToHHMM(calculateTotalTime())}",
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    widget.onSubmit(
+                      pomorodoNumber,
+                      pomodoroTimer,
+                      shortBreakTime,
+                      shortBreakLimit,
+                      longBreakTime,
+                      calculateTotalTime(),
+                    );
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    height: 50,
+                    padding: const EdgeInsets.all(15),
+                    margin: const EdgeInsets.symmetric(vertical: 16),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      "Lưu",
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
       ),
-      actions: [
-        Text("Tổng thời gian: ${formatMinutesToHHMM(calculateTotalTime())}"),
-        ElevatedButton(
-            onPressed: () {
-              widget.onSubmit(
-                pomorodoNumber,
-                pomodoroTimer,
-                shortBreakTime,
-                shortBreakLimit,
-                longBreakTime,
-                calculateTotalTime(),
-              );
-            },
-            child: const Text("Lưu"))
-      ],
     );
   }
 

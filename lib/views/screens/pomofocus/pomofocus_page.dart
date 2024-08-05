@@ -281,7 +281,7 @@ class _PomofocusScreenState extends State<PomofocusScreen> {
               widget.task!.subTask[index].completed = value;
               context
                   .read<PomofocusPageModel>()
-                  .changeStausTodo(context, widget.task!.subTask[index]);
+                  .changeStatusTodo(context, widget.task!.subTask[index]);
             },
           );
         },

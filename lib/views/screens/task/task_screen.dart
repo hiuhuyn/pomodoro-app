@@ -19,6 +19,9 @@ class _TaskScreenState extends State<TaskScreen> {
   late Task task;
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
+  final goalController = TextEditingController();
+
+  int page = 0;
   @override
   void initState() {
     super.initState();
@@ -37,39 +40,80 @@ class _TaskScreenState extends State<TaskScreen> {
     }
     titleController.text = widget.task?.title ?? "";
     descriptionController.text = widget.task?.description ?? "";
+    goalController.text = widget.task?.goalTime.toString() ?? "";
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(task.id == null ? 'Add Task' : 'Edit Task'),
-        actions: [
-          if (task.id != null)
-            IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () {
-                context
-                    .read<TaskManagementScreenViewmodel>()
-                    .deleteTask(context, task.id!);
-              },
+      body: SafeArea(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 20,
             ),
-        ],
-      ),
-      body: PageView(
-        children: [
-          AddEditTaskPage(
-            key: GlobalKey(),
-            task: task,
-            titleController: titleController,
-            descriptionController: descriptionController,
-          ),
-          ManagementTodoPage(
-            key: GlobalKey(),
-            values: task.subTask,
-            idTask: task.id,
-          ),
-        ],
+            Expanded(
+              child: PageView(
+                onPageChanged: (value) {
+                  setState(() {
+                    page = value;
+                  });
+                },
+                children: [
+                  AddEditTaskPage(
+                    key: GlobalKey(),
+                    task: task,
+                    titleController: titleController,
+                    descriptionController: descriptionController,
+                    goalController: goalController,
+                  ),
+                  ManagementTodoPage(
+                    key: GlobalKey(),
+                    values: task.subTask,
+                    idTask: task.id,
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                      child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: page == 0 ? Colors.blue : Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                              color: page == 0 ? Colors.blue : Colors.grey,
+                              blurRadius: 2,
+                              spreadRadius: 1,
+                              offset: const Offset(0, 2))
+                        ]),
+                    height: 10,
+                  )),
+                  Expanded(
+                      child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: page == 1 ? Colors.blue : Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                              color: page == 1 ? Colors.blue : Colors.grey,
+                              blurRadius: 2,
+                              spreadRadius: 1,
+                              offset: const Offset(0, 2))
+                        ]),
+                    height: 10,
+                  )),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

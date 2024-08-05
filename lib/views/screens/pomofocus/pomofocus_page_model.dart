@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:pomodoro_focus/views/screens/task_management/task_management_screen_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 import '../../../model/task.dart';
 import '../../../model/todo.dart';
@@ -167,7 +170,10 @@ class PomofocusPageModel extends ChangeNotifier {
       ),
     ).then(
       (value) {
-        if (value == "ok") {
+        if (value == "ok" &&
+            ((_currentMinutes != pomodoroTime && _currentSeconds > 0) ||
+                (_currentMinutes != _shortBreakTime && _currentSeconds > 0))) {
+          log("value: $value");
           if (!_isBreak) {
             _saveFocusTime(context);
             _currentPomodoroNumber++;
@@ -187,7 +193,7 @@ class PomofocusPageModel extends ChangeNotifier {
         int focusTime = _pomodoroTime - currentMinutes;
         focusTime += task?.focusTime ?? 0;
         task?.focusTime = focusTime;
-        await taskRepository.updateTask(task!);
+        context.read<TaskManagementScreenViewmodel>().saveTask(context, task!);
       } catch (e) {
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context)
@@ -231,11 +237,12 @@ class PomofocusPageModel extends ChangeNotifier {
     );
   }
 
-  Future changeStausTodo(BuildContext context, Todo todo) async {
+  Future changeStatusTodo(BuildContext context, Todo todo) async {
     if (task != null) {
       try {
         await taskRepository.updateTodo(todo);
       } catch (e) {
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Lỗi thay đổi trạng thái: $e")));
       }

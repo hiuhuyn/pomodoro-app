@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pomodoro_focus/model/todo.dart';
 import 'package:pomodoro_focus/repositorys/repository_local.dart';
+import 'package:pomodoro_focus/services/notification_service.dart';
 
 import '../../../model/task.dart';
 
@@ -65,6 +66,16 @@ class TaskManagementScreenViewmodel extends ChangeNotifier {
           tasks = await taskRepository.getTasksByMonth(DateTime.now());
           break;
       }
+      for (var element in tasks) {
+        NotificationService.cancelNotification(element.id!);
+        if (element.startDate != null) {
+          NotificationService.scheduleNotification(
+            id: element.id!,
+            body: element.title ?? "",
+            scheduledTime: element.startDate!.copyWith(second: 0),
+          );
+        }
+      }
       notifyListeners();
     } catch (e) {
       showDialog(
@@ -120,6 +131,14 @@ class TaskManagementScreenViewmodel extends ChangeNotifier {
       int id = await taskRepository.addTask(task);
       task.id = id;
       tasks.add(task);
+      NotificationService.cancelNotification(task.id!);
+      if (task.startDate != null) {
+        NotificationService.scheduleNotification(
+          id: task.id!,
+          body: task.title ?? "",
+          scheduledTime: task.startDate!.copyWith(second: 0),
+        );
+      }
       notifyListeners();
     } catch (e) {
       showDialog(
@@ -147,6 +166,14 @@ class TaskManagementScreenViewmodel extends ChangeNotifier {
         (element) => element.id == task.id,
       );
       tasks[index] = task;
+      NotificationService.cancelNotification(task.id!);
+      if (task.startDate != null) {
+        NotificationService.scheduleNotification(
+          id: task.id!,
+          body: task.title ?? "",
+          scheduledTime: task.startDate!.copyWith(second: 0),
+        );
+      }
       notifyListeners();
     } catch (e) {
       showDialog(
@@ -211,6 +238,7 @@ class TaskManagementScreenViewmodel extends ChangeNotifier {
                         tasks =
                             tasks.where((task) => task.id != taskId).toList();
                         await taskRepository.removeTask(taskId);
+                        NotificationService.cancelNotification(taskId);
                         notifyListeners();
                         // ignore: use_build_context_synchronously
                         Navigator.pop(context);

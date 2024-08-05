@@ -3,13 +3,11 @@ import 'package:pomodoro_focus/core/route/route_generate.dart';
 import 'package:pomodoro_focus/core/route/route_name.dart';
 import 'package:pomodoro_focus/repositorys/repository_local.dart';
 import 'package:pomodoro_focus/set_up.dart';
-import 'package:pomodoro_focus/views/screens/statistics_screen/statistics_screen_viewmodel.dart';
+import 'package:pomodoro_focus/views/screens/statistics/statistics_screen_viewmodel.dart';
 import 'package:provider/provider.dart';
-
 import 'views/screens/task_management/task_management_screen_viewmodel.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
   await setup();
   runApp(const MyApp());
 }

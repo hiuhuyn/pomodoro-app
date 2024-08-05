@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pomodoro_focus/views/screens/statistics_screen/statistics_screen.dart';
+import 'package:pomodoro_focus/views/screens/statistics/statistics_screen.dart';
 import 'package:pomodoro_focus/views/screens/task_management/task_management_screen.dart';
 import 'package:pomodoro_focus/views/screens/task_management/task_management_screen_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -12,8 +12,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _pageController = PageController();
-  // final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
+  int page = 0;
   @override
   void initState() {
     super.initState();
@@ -24,33 +23,61 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: PageView(
-          // onPageChanged: (value) {
-          //   final CurvedNavigationBarState? navBarState =
-          //       _bottomNavigationKey.currentState;
-          //   navBarState?.setPage(value);
-          // },
-          controller: _pageController,
-          children: const [
-            TaskManagementScreen(),
-            StatisticsScreen(),
+        child: Column(
+          children: [
+            Expanded(
+              child: PageView(
+                onPageChanged: (value) {
+                  setState(() {
+                    page = value;
+                  });
+                },
+                children: const [
+                  TaskManagementScreen(),
+                  StatisticsScreen(),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                      child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: page == 0 ? Colors.blue : Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                              color: page == 0 ? Colors.blue : Colors.grey,
+                              blurRadius: 2,
+                              spreadRadius: 1,
+                              offset: const Offset(0, 2))
+                        ]),
+                    height: 10,
+                  )),
+                  Expanded(
+                      child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: page == 1 ? Colors.blue : Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                              color: page == 1 ? Colors.blue : Colors.grey,
+                              blurRadius: 2,
+                              spreadRadius: 1,
+                              offset: const Offset(0, 2))
+                        ]),
+                    height: 10,
+                  )),
+                ],
+              ),
+            ),
           ],
         ),
       ),
-      // bottomNavigationBar: CurvedNavigationBar(
-      //   key: _bottomNavigationKey,
-      //   backgroundColor: Colors.white,
-      //   items: const [
-      //     Icon(Icons.list_sharp, size: 30),
-      //     Icon(Icons.bar_chart_sharp, size: 30),
-      //   ],
-      //   animationDuration: const Duration(milliseconds: 200),
-      //   onTap: (index) {
-      //     _pageController.animateToPage(index,
-      //         duration: const Duration(milliseconds: 200),
-      //         curve: Curves.linear);
-      //   },
-      // ),
     );
   }
 }

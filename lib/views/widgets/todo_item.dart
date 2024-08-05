@@ -112,7 +112,7 @@ class _TodoItemStateEdit extends State<TodoItem> {
       },
       child: Container(
         padding: const EdgeInsets.all(8),
-        margin: const EdgeInsets.symmetric(vertical: 8),
+        margin: const EdgeInsets.all(8),
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),

@@ -1,10 +1,14 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:pomodoro_focus/core/unit.dart';
+import 'package:pomodoro_focus/views/screens/statistics/statistics_screen_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 class TaskStatisticsChart extends StatelessWidget {
   final Map<int, double> focusTimePerDay;
   final Map<int, int> completedTasksPerDay;
   final Map<int, int> pendingTasksPerDay;
+  final DateTime date;
   final String title;
   int getMaxTasksInADay(
       Map<int, int> completedTasksPerDay, Map<int, int> pendingTasksPerDay) {
@@ -35,25 +39,65 @@ class TaskStatisticsChart extends StatelessWidget {
     return maxFocusTime;
   }
 
-  const TaskStatisticsChart(
-      {super.key,
-      required this.focusTimePerDay,
-      required this.completedTasksPerDay,
-      required this.pendingTasksPerDay,
-      required this.title});
+  const TaskStatisticsChart({
+    super.key,
+    required this.focusTimePerDay,
+    required this.completedTasksPerDay,
+    required this.pendingTasksPerDay,
+    required this.title,
+    required this.date,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(
-          title,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                title,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineSmall
+                    ?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(formatDate(date, isYear: true)),
+                IconButton(
+                  onPressed: () {
+                    showDatePicker(
+                      context: context,
+                      initialDate: date,
+                      firstDate: DateTime(2023),
+                      lastDate: DateTime(2050),
+                      initialDatePickerMode: DatePickerMode.day,
+                    ).then(
+                      (value) {
+                        if (value != null) {
+                          context
+                              .read<StatisticsScreenViewModel>()
+                              .updateChartWeek(value, context);
+                        }
+                      },
+                    );
+                  },
+                  icon: const Icon(Icons.calendar_month_outlined),
+                ),
+              ],
+            ),
+          ],
         ),
         const SizedBox(height: 20),
         _buildFocusTimeLineChart(),
-        const SizedBox(height: 40),
-        _buildTaskCompletionBarChart(),
+        // const SizedBox(height: 40),
+        // _buildTaskCompletionBarChart(),
       ],
     );
   }

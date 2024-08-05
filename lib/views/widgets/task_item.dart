@@ -88,6 +88,11 @@ class _TaskItemState extends State<TaskItem> {
                             overflow: TextOverflow.ellipsis,
                           ),
                     ),
+                  Text(
+                    "Mức độ hoàn thành: ${widget.task.focusTime}/${widget.task.goalTime}",
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
                   Row(
                     children: [
                       if (widget.task.startDate != null &&
@@ -110,11 +115,6 @@ class _TaskItemState extends State<TaskItem> {
                 ],
               ),
             ),
-            if (widget.task.repeatType != RepeatType.none)
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Icon(Icons.repeat),
-              ),
           ],
         ),
       ),
