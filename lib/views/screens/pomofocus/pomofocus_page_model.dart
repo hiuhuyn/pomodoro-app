@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:pomodoro_focus/services/notification_service.dart';
 import 'package:pomodoro_focus/views/screens/task_management/task_management_screen_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -132,6 +133,10 @@ class PomofocusPageModel extends ChangeNotifier {
       } else {
         _currentMinutes = pomodoroTime;
       }
+      NotificationService.showInstantNotification(
+        "Kết thúc thời gian",
+        "Quay trở lại và bắt đầu phiên pomodoro mới nào",
+      );
     }
     notifyListeners();
   }
