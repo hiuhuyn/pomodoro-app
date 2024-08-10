@@ -154,6 +154,7 @@ class PomofocusPageModel extends ChangeNotifier {
   }
 
   Future endTimer(BuildContext context) async {
+    pauseTimer();
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -186,10 +187,12 @@ class PomofocusPageModel extends ChangeNotifier {
           stopTimer(reset: true);
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text("Kết thúc phiên")));
+          notifyListeners();
+        } else {
+          resumeTimer(context);
         }
       },
     );
-    notifyListeners();
   }
 
   Future _saveFocusTime(BuildContext context) async {
