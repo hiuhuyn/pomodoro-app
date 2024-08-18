@@ -59,7 +59,7 @@ class StatisticsScreenViewModel extends ChangeNotifier {
           children: [
             Text(
               "Tất cả",
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),

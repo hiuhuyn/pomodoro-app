@@ -79,7 +79,7 @@ class ChartWeekStatisticsWidget extends StatelessWidget {
                   maxLines: 1,
                   style: Theme.of(context)
                       .textTheme
-                      .headlineSmall
+                      .bodyLarge
                       ?.copyWith(fontWeight: FontWeight.bold),
                 ),
               ),

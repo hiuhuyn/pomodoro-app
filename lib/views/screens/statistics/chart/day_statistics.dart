@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../core/unit.dart';
 
+// ignore: must_be_immutable
 class DayStatisticsWidget extends StatefulWidget {
   DayStatisticsWidget({
     super.key,
@@ -60,7 +61,7 @@ class _DayStatisticsWidgetState extends State<DayStatisticsWidget> {
                 isToday
                     ? "Hôm nay"
                     : "Ngày ${formatDate(widget.date, isYear: true)}",
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),

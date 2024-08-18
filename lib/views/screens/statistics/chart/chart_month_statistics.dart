@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../../../model/task.dart';
 import '../statistics_screen_viewmodel.dart';
 
+// ignore: must_be_immutable
 class ChartMonthStatisticsWidget extends StatelessWidget {
   ChartMonthStatisticsWidget(
       {super.key, required this.month, required this.tasks});
@@ -65,7 +66,7 @@ class ChartMonthStatisticsWidget extends StatelessWidget {
             ),
             BoxShadow(
               offset: const Offset(-2.0, -2.0),
-              color: Colors.black.withOpacity(0.2),
+              color: const Color.fromRGBO(0, 0, 0, 1).withOpacity(0.2),
               blurRadius: 2.0,
             ),
           ]),
@@ -77,6 +78,13 @@ class ChartMonthStatisticsWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text(
+                  "Thống kê theo tháng",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge
+                      ?.copyWith(fontWeight: FontWeight.bold),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
