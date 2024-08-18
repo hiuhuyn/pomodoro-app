@@ -177,12 +177,23 @@ class _PomofocusScreenState extends State<PomofocusScreen> {
             );
           }
         }
-        return Container(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: wPomodoro,
-          ),
+        return Column(
+          children: [
+            Text(
+              model.isBreak ? "Nghỉ ngơi" : "Tập trung",
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: model.isBreak ? Colors.yellow : Colors.red,
+                  ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: wPomodoro,
+              ),
+            ),
+          ],
         );
       },
     );

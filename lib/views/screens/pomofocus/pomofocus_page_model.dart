@@ -94,9 +94,9 @@ class PomofocusPageModel extends ChangeNotifier {
       }
       _currentSeconds = maxSeconds;
     }
-    notifyListeners();
+    // notifyListeners();
     _timer = Timer.periodic(
-      const Duration(milliseconds: 100),
+      const Duration(seconds: 1),
       (timer) {
         if (currentSeconds == 0) {
           if (currentMinutes == 0) {
@@ -105,8 +105,8 @@ class PomofocusPageModel extends ChangeNotifier {
               _currentPomodoroNumber++;
             }
             stopTimer(reset: true);
-            ScaffoldMessenger.of(context)
-                .showSnackBar(const SnackBar(content: Text("Kết thúc phiên")));
+            // ScaffoldMessenger.of(context)
+            //     .showSnackBar(const SnackBar(content: Text("Kết thúc phiên")));
           } else {
             _currentSeconds = maxSeconds;
             _currentMinutes--;
@@ -130,13 +130,17 @@ class PomofocusPageModel extends ChangeNotifier {
       _isBreak = !_isBreak;
       if (_isBreak) {
         _currentMinutes = breakTime;
+        NotificationService.showInstantNotification(
+          "Kết thúc thời gian",
+          "Đã đến thời gian nghỉ ngơi",
+        );
       } else {
         _currentMinutes = pomodoroTime;
+        NotificationService.showInstantNotification(
+          "Kết thúc thời gian",
+          "Thời gian nghỉ ngơi đã kết thúc",
+        );
       }
-      NotificationService.showInstantNotification(
-        "Kết thúc thời gian",
-        "Quay trở lại và bắt đầu phiên pomodoro mới nào",
-      );
     }
     notifyListeners();
   }
@@ -185,8 +189,8 @@ class PomofocusPageModel extends ChangeNotifier {
             _currentPomodoroNumber++;
           }
           stopTimer(reset: true);
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("Kết thúc phiên")));
+          // ScaffoldMessenger.of(context)
+          //     .showSnackBar(const SnackBar(content: Text("Kết thúc phiên")));
           notifyListeners();
         } else {
           resumeTimer(context);
