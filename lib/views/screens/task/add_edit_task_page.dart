@@ -60,343 +60,375 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(top: 8),
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              boxShadow: const [
-                                BoxShadow(
-                                  blurRadius: 4,
-                                  color: Color(0x33000000),
-                                  offset: Offset(
-                                    2,
-                                    2,
-                                  ),
-                                  spreadRadius: 2,
-                                )
-                              ],
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Tên công việc",
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                                TextFormField(
-                                  maxLines: null,
-                                  controller: widget.titleController,
-                                  decoration: const InputDecoration(
-                                    hintText: 'Nhập tên công việc...',
-                                    enabledBorder: InputBorder.none,
-                                    focusedBorder: InputBorder.none,
-                                    errorBorder: InputBorder.none,
-                                    focusedErrorBorder: InputBorder.none,
-                                    contentPadding: EdgeInsets.all(8),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: const [
-                          BoxShadow(
-                            blurRadius: 4,
-                            color: Color(0x33000000),
-                            offset: Offset(
-                              2,
-                              2,
-                            ),
-                            spreadRadius: 2,
-                          )
-                        ],
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: ListTile(
-                        onTap: () {
-                          setState(() {
-                            isClickInputGoal = !isClickInputGoal;
-                          });
-                        },
-                        leading: const Icon(Icons.golf_course_sharp),
-                        title: Text(
-                          "Mục tiêu ${formatMinutesToHHMM(widget.task.goalTime)}",
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        subtitle: isClickInputGoal
-                            ? TextFormField(
-                                controller: widget.goalController,
-                                maxLines: null,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: <TextInputFormatter>[
-                                  FilteringTextInputFormatter.digitsOnly,
-                                ],
-                                onChanged: (value) {
-                                  setState(() {
-                                    try {
-                                      widget.task.goalTime = int.parse(value);
-                                    } catch (e) {
-                                      widget.task.goalTime = 0;
-                                    }
-                                  });
-                                },
-                                maxLength: 5,
-                                decoration: const InputDecoration(
-                                  hintText:
-                                      'Nhập thời gian mục tiêu của bạn...',
-                                  enabledBorder: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                  errorBorder: InputBorder.none,
-                                  focusedErrorBorder: InputBorder.none,
-                                  contentPadding: EdgeInsets.all(8),
-                                ),
-                              )
-                            : null,
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: const [
-                          BoxShadow(
-                            blurRadius: 4,
-                            color: Color(0x33000000),
-                            offset: Offset(
-                              2,
-                              2,
-                            ),
-                            spreadRadius: 2,
-                          )
-                        ],
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: ListTile(
-                        leading: const Icon(Icons.date_range),
-                        onTap: () {
-                          showDateTimeDialog(context);
-                        },
-                        title: const Text("Đặt thời gian"),
-                        subtitle: (widget.task.startDate != null &&
-                                widget.task.endDate != null)
-                            ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  widget.task.repeatType == RepeatType.none
-                                      ? Text(
-                                          'Ngày: ${formatDateRange(widget.task.startDate!, widget.task.endDate!)}',
-                                        )
-                                      : const SizedBox(),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    'Thời gian: ${formatTimeRange(widget.task.startDate!, widget.task.endDate!)}',
-                                  ),
-                                ],
-                              )
-                            : null,
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: const [
-                          BoxShadow(
-                            blurRadius: 4,
-                            color: Color(0x33000000),
-                            offset: Offset(
-                              2,
-                              2,
-                            ),
-                            spreadRadius: 2,
-                          )
-                        ],
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: ListTile(
-                        onTap: () {
-                          setState(() {
-                            isClickInputDesc = !isClickInputDesc;
-                          });
-                        },
-                        leading: const Icon(Icons.note_outlined),
-                        title: const Text("Mô tả"),
-                        subtitle: isClickInputDesc
-                            ? TextFormField(
-                                controller: widget.descriptionController,
-                                maxLines: null,
-                                decoration: const InputDecoration(
-                                  hintText: 'Nhập mô tả về công việc...',
-                                  enabledBorder: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                  errorBorder: InputBorder.none,
-                                  focusedErrorBorder: InputBorder.none,
-                                  contentPadding: EdgeInsets.all(8),
-                                ),
-                              )
-                            : null,
-                      ),
-                    ),
+                    inputTitle(context),
+                    inputGolf(),
+                    setTime(context),
+                    inputDescription(),
                   ],
                 ),
               ),
             ),
             Column(
               children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(15),
-                    margin: const EdgeInsets.all(10),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: const [
-                        BoxShadow(
-                          blurRadius: 4,
-                          color: Color(0x33000000),
-                          offset: Offset(
-                            2,
-                            2,
-                          ),
-                          spreadRadius: 2,
-                        )
-                      ],
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    width: double.infinity,
-                    child: Text(
-                      "Hủy",
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.bold, color: Colors.black),
-                    ),
-                  ),
-                ),
+                buttonCancel(context),
                 Row(
                   children: [
-                    if (widget.task.id != null)
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            context
-                                .read<TaskManagementScreenViewmodel>()
-                                .deleteTask(context, widget.task.id!);
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(15),
-                            margin: const EdgeInsets.all(10),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Colors.redAccent[100],
-                              boxShadow: const [
-                                BoxShadow(
-                                  blurRadius: 4,
-                                  color: Color(0x33000000),
-                                  offset: Offset(
-                                    2,
-                                    2,
-                                  ),
-                                  spreadRadius: 2,
-                                )
-                              ],
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              "Xóa",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
-                            ),
-                          ),
-                        ),
-                      ),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          if (widget.titleController.text.isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                duration: Duration(seconds: 2),
-                                content:
-                                    Text("Vui lòng điền tên của công việc."),
-                              ),
-                            );
-                            return;
-                          }
-                          widget.task.title = widget.titleController.text;
-                          widget.task.description =
-                              widget.descriptionController.text.isEmpty
-                                  ? null
-                                  : widget.descriptionController.text;
-                          try {
-                            widget.task.goalTime = int.parse(
-                                widget.goalController.text.toString());
-                          } catch (e) {
-                            widget.task.goalTime = 0;
-                          }
-
-                          log(widget.task.toString());
-                          context
-                              .read<TaskManagementScreenViewmodel>()
-                              .saveTask(context, widget.task);
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(15),
-                          margin: const EdgeInsets.all(10),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            boxShadow: const [
-                              BoxShadow(
-                                blurRadius: 4,
-                                color: Color(0x33000000),
-                                offset: Offset(
-                                  2,
-                                  2,
-                                ),
-                                spreadRadius: 2,
-                              )
-                            ],
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            "Lưu",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyLarge
-                                ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ),
+                    if (widget.task.id != null) buttonDelete(context),
+                    buttonSave(context),
                   ],
                 ),
               ],
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Expanded buttonSave(BuildContext context) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          if (widget.titleController.text.isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                duration: Duration(seconds: 2),
+                content: Text("Vui lòng điền tên của công việc."),
+              ),
+            );
+            return;
+          }
+          widget.task.title = widget.titleController.text;
+          widget.task.description = widget.descriptionController.text.isEmpty
+              ? null
+              : widget.descriptionController.text;
+          try {
+            widget.task.goalTime =
+                int.parse(widget.goalController.text.toString());
+          } catch (e) {
+            widget.task.goalTime = 0;
+          }
+
+          log(widget.task.toString());
+          context
+              .read<TaskManagementScreenViewmodel>()
+              .saveTask(context, widget.task);
+          Navigator.pop(context);
+        },
+        child: Container(
+          padding: const EdgeInsets.all(15),
+          margin: const EdgeInsets.all(10),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: Colors.blue,
+            boxShadow: const [
+              BoxShadow(
+                blurRadius: 4,
+                color: Color(0x33000000),
+                offset: Offset(
+                  2,
+                  2,
+                ),
+                spreadRadius: 2,
+              )
+            ],
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Text(
+            "Lưu",
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge
+                ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Expanded buttonDelete(BuildContext context) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          context
+              .read<TaskManagementScreenViewmodel>()
+              .deleteTask(context, widget.task.id!);
+        },
+        child: Container(
+          padding: const EdgeInsets.all(15),
+          margin: const EdgeInsets.all(10),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: Colors.redAccent[100],
+            boxShadow: const [
+              BoxShadow(
+                blurRadius: 4,
+                color: Color(0x33000000),
+                offset: Offset(
+                  2,
+                  2,
+                ),
+                spreadRadius: 2,
+              )
+            ],
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Text(
+            "Xóa",
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge
+                ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+          ),
+        ),
+      ),
+    );
+  }
+
+  GestureDetector buttonCancel(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.pop(context);
+      },
+      child: Container(
+        padding: const EdgeInsets.all(15),
+        margin: const EdgeInsets.all(10),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: const [
+            BoxShadow(
+              blurRadius: 4,
+              color: Color(0x33000000),
+              offset: Offset(
+                2,
+                2,
+              ),
+              spreadRadius: 2,
+            )
+          ],
+          borderRadius: BorderRadius.circular(12),
+        ),
+        width: double.infinity,
+        child: Text(
+          "Hủy",
+          style: Theme.of(context)
+              .textTheme
+              .bodyLarge
+              ?.copyWith(fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+      ),
+    );
+  }
+
+  Container inputDescription() {
+    return Container(
+      margin: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: const [
+          BoxShadow(
+            blurRadius: 4,
+            color: Color(0x33000000),
+            offset: Offset(
+              2,
+              2,
+            ),
+            spreadRadius: 2,
+          )
+        ],
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: ListTile(
+        onTap: () {
+          setState(() {
+            isClickInputDesc = !isClickInputDesc;
+          });
+        },
+        leading: const Icon(Icons.note_outlined),
+        title: const Text("Mô tả"),
+        subtitle: isClickInputDesc
+            ? TextFormField(
+                controller: widget.descriptionController,
+                maxLines: null,
+                decoration: const InputDecoration(
+                  hintText: 'Nhập mô tả về công việc...',
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  focusedErrorBorder: InputBorder.none,
+                  contentPadding: EdgeInsets.all(8),
+                ),
+              )
+            : null,
+      ),
+    );
+  }
+
+  Container setTime(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: const [
+          BoxShadow(
+            blurRadius: 4,
+            color: Color(0x33000000),
+            offset: Offset(
+              2,
+              2,
+            ),
+            spreadRadius: 2,
+          )
+        ],
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: ListTile(
+        leading: const Icon(Icons.date_range),
+        onTap: () {
+          showDateTimeDialog(context);
+        },
+        title: const Text("Đặt thời gian"),
+        trailing: Switch(
+          value: (widget.task.startDate != null && widget.task.endDate != null),
+          onChanged: (value) {
+            if (!value) {
+              setState(() {
+                widget.task.startDate = null;
+                widget.task.endDate = null;
+              });
+            } else {
+              showDateTimeDialog(context);
+            }
+          },
+        ),
+        subtitle: (widget.task.startDate != null && widget.task.endDate != null)
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Ngày: ${formatDateRange(widget.task.startDate!, widget.task.endDate!)}',
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Thời gian: ${formatTimeRange(widget.task.startDate!, widget.task.endDate!)}',
+                  ),
+                ],
+              )
+            : null,
+      ),
+    );
+  }
+
+  Container inputGolf() {
+    return Container(
+      margin: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: const [
+          BoxShadow(
+            blurRadius: 4,
+            color: Color(0x33000000),
+            offset: Offset(
+              2,
+              2,
+            ),
+            spreadRadius: 2,
+          )
+        ],
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: ListTile(
+        onTap: () {
+          setState(() {
+            isClickInputGoal = !isClickInputGoal;
+          });
+        },
+        leading: const Icon(Icons.golf_course_sharp),
+        title: Text(
+          "Mục tiêu ${formatMinutesToHHMM(widget.task.goalTime)}",
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: isClickInputGoal
+            ? TextFormField(
+                controller: widget.goalController,
+                maxLines: null,
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    try {
+                      widget.task.goalTime = int.parse(value);
+                    } catch (e) {
+                      widget.task.goalTime = 0;
+                    }
+                  });
+                },
+                maxLength: 5,
+                decoration: const InputDecoration(
+                  hintText: 'Nhập thời gian mục tiêu của bạn...',
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  focusedErrorBorder: InputBorder.none,
+                  contentPadding: EdgeInsets.all(8),
+                ),
+              )
+            : null,
+      ),
+    );
+  }
+
+  Padding inputTitle(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 8),
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: const [
+                BoxShadow(
+                  blurRadius: 4,
+                  color: Color(0x33000000),
+                  offset: Offset(
+                    2,
+                    2,
+                  ),
+                  spreadRadius: 2,
+                )
+              ],
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Tên công việc",
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                TextFormField(
+                  maxLines: null,
+                  controller: widget.titleController,
+                  decoration: const InputDecoration(
+                    hintText: 'Nhập tên công việc...',
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    focusedErrorBorder: InputBorder.none,
+                    contentPadding: EdgeInsets.all(8),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
