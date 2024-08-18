@@ -10,14 +10,14 @@ class StatisticsScreen extends StatelessWidget {
     context
         .read<StatisticsScreenViewModel>()
         .fetchData(DateTime.now(), context);
-    return Scaffold(
-      body: RefreshIndicator(
-        onRefresh: () {
-          return context
-              .read<StatisticsScreenViewModel>()
-              .fetchData(DateTime.now(), context);
-        },
-        child: SingleChildScrollView(
+    return RefreshIndicator(
+      onRefresh: () {
+        return context
+            .read<StatisticsScreenViewModel>()
+            .fetchData(DateTime.now(), context);
+      },
+      child: Scaffold(
+        body: SingleChildScrollView(
           padding: const EdgeInsets.all(8),
           child: Consumer<StatisticsScreenViewModel>(
             builder: (context, value, child) {
