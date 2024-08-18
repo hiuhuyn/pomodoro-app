@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:pomodoro_focus/core/unit.dart';
 import 'package:pomodoro_focus/repositorys/repository_local.dart';
+import 'package:pomodoro_focus/views/screens/statistics/chart/chart_month_statistics.dart';
 import 'package:pomodoro_focus/views/screens/statistics/chart/day_statistics.dart';
 
 import '../../../model/task.dart';
@@ -21,7 +21,7 @@ class StatisticsScreenViewModel extends ChangeNotifier {
   Widget get chartToday => _chartToday;
   Widget get allTime => _allTime;
 
-  void fetchData(DateTime date, BuildContext context) {
+  Future fetchData(DateTime date, BuildContext context) async {
     updateAllTime(context);
     updateChartToday(context, date);
     updateChartWeek(date, context);
@@ -149,7 +149,7 @@ class StatisticsScreenViewModel extends ChangeNotifier {
     }
   }
 
-  void updateChartWeek(DateTime date, BuildContext context) async {
+  Future updateChartWeek(DateTime date, BuildContext context) async {
     final Map<int, double> focusTimePerDay = {
       for (var i = 1; i <= 7; i++) i: 0.0
     }; // từ thứ 2 đến chủ nhật
@@ -178,31 +178,12 @@ class StatisticsScreenViewModel extends ChangeNotifier {
       final result = await taskRepository.getTasksByWeek(date);
       log(result.toString());
       calculateWeeklyStatistics(result);
-      _chartWeek = Container(
-        padding: const EdgeInsets.all(8),
-        width: double.infinity,
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
-            boxShadow: [
-              BoxShadow(
-                offset: const Offset(2.0, 2.0),
-                color: Colors.black.withOpacity(0.2),
-                blurRadius: 2.0,
-              ),
-              BoxShadow(
-                offset: const Offset(-2.0, -2.0),
-                color: Colors.black.withOpacity(0.2),
-                blurRadius: 2.0,
-              ),
-            ]),
-        child: TaskStatisticsChart(
-          title: "Theo tuần",
-          focusTimePerDay: focusTimePerDay,
-          completedTasksPerDay: completedTasksPerDay,
-          pendingTasksPerDay: pendingTasksPerDay,
-          date: date,
-        ),
+      _chartWeek = ChartWeekStatisticsWidget(
+        title: "Theo tuần",
+        focusTimePerDay: focusTimePerDay,
+        completedTasksPerDay: completedTasksPerDay,
+        pendingTasksPerDay: pendingTasksPerDay,
+        date: date,
       );
       notifyListeners();
     } catch (e) {
@@ -222,11 +203,35 @@ class StatisticsScreenViewModel extends ChangeNotifier {
     }
   }
 
-  void updateChartMonth(DateTime date, BuildContext context) async {
-    notifyListeners();
+  Future updateChartMonth(DateTime date, BuildContext context) async {
+    try {
+      final result = await taskRepository.getTasksByMonth(date);
+      _chartMonth = ChartMonthStatisticsWidget(
+        key: GlobalKey(),
+        month: date,
+        tasks: result,
+      );
+      notifyListeners();
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: Text('Failed to fetch tasks: $e'),
+          actions: <Widget>[
+            ElevatedButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          ],
+        ),
+      );
+    }
   }
 
-  void updateChartToday(BuildContext context, DateTime date) async {
+  Future updateChartToday(BuildContext context, DateTime date) async {
     try {
       final result = await taskRepository.getTasksByDate(date);
       int totalFocusTime = 0;

@@ -4,7 +4,7 @@ import 'package:pomodoro_focus/core/unit.dart';
 import 'package:pomodoro_focus/views/screens/statistics/statistics_screen_viewmodel.dart';
 import 'package:provider/provider.dart';
 
-class TaskStatisticsChart extends StatelessWidget {
+class ChartWeekStatisticsWidget extends StatelessWidget {
   final Map<int, double> focusTimePerDay;
   final Map<int, int> completedTasksPerDay;
   final Map<int, int> pendingTasksPerDay;
@@ -39,7 +39,7 @@ class TaskStatisticsChart extends StatelessWidget {
     return maxFocusTime;
   }
 
-  const TaskStatisticsChart({
+  const ChartWeekStatisticsWidget({
     super.key,
     required this.focusTimePerDay,
     required this.completedTasksPerDay,
@@ -50,65 +50,96 @@ class TaskStatisticsChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                title,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineSmall
-                    ?.copyWith(fontWeight: FontWeight.bold),
-              ),
+    return Container(
+      padding: const EdgeInsets.all(8),
+      width: double.infinity,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          boxShadow: [
+            BoxShadow(
+              offset: const Offset(2.0, 2.0),
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 2.0,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(formatDate(date, isYear: true)),
-                IconButton(
-                  onPressed: () {
-                    showDatePicker(
-                      context: context,
-                      initialDate: date,
-                      firstDate: DateTime(2023),
-                      lastDate: DateTime(2050),
-                      initialDatePickerMode: DatePickerMode.day,
-                    ).then(
-                      (value) {
-                        if (value != null) {
-                          context
-                              .read<StatisticsScreenViewModel>()
-                              .updateChartWeek(value, context);
-                        }
-                      },
-                    );
-                  },
-                  icon: const Icon(Icons.calendar_month_outlined),
+            BoxShadow(
+              offset: const Offset(-2.0, -2.0),
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 2.0,
+            ),
+          ]),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  title,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineSmall
+                      ?.copyWith(fontWeight: FontWeight.bold),
                 ),
-              ],
-            ),
-          ],
-        ),
-        const SizedBox(height: 20),
-        _buildFocusTimeLineChart(),
-        // const SizedBox(height: 40),
-        // _buildTaskCompletionBarChart(),
-      ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    formatDate(date, isYear: true),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      showDatePicker(
+                        context: context,
+                        initialDate: date,
+                        firstDate: DateTime(2023),
+                        lastDate: DateTime(2050),
+                        initialDatePickerMode: DatePickerMode.day,
+                      ).then(
+                        (value) {
+                          if (value != null) {
+                            context
+                                .read<StatisticsScreenViewModel>()
+                                .updateChartWeek(value, context);
+                          }
+                        },
+                      );
+                    },
+                    icon: const Icon(Icons.calendar_month_outlined),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          buildFocusTimeLineChart(context),
+          const SizedBox(height: 20),
+          buildTaskCompletionBarChart(context),
+        ],
+      ),
     );
   }
 
-  Widget _buildFocusTimeLineChart() {
+  Widget buildFocusTimeLineChart(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Thời gian tập trung"),
+        Text(
+          "Thời gian tập trung",
+          style: Theme.of(context)
+              .textTheme
+              .bodyLarge
+              ?.copyWith(fontWeight: FontWeight.bold),
+        ),
         AspectRatio(
-          aspectRatio: 1.5,
+          aspectRatio: 2,
           child: LineChart(
             LineChartData(
               maxY: getMaxFocusTimePerDay(focusTimePerDay),
@@ -124,13 +155,19 @@ class TaskStatisticsChart extends StatelessWidget {
     );
   }
 
-  Widget _buildTaskCompletionBarChart() {
+  Widget buildTaskCompletionBarChart(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Công việc hoàn thành và chưa hoàn thành"),
+        Text(
+          "Công việc hoàn thành và chưa hoàn thành",
+          style: Theme.of(context)
+              .textTheme
+              .bodyLarge
+              ?.copyWith(fontWeight: FontWeight.bold),
+        ),
         AspectRatio(
-          aspectRatio: 1,
+          aspectRatio: 2,
           child: BarChart(
             BarChartData(
               maxY: getMaxTasksInADay(completedTasksPerDay, pendingTasksPerDay)
@@ -143,6 +180,24 @@ class TaskStatisticsChart extends StatelessWidget {
             ),
           ),
         ),
+        Row(
+          children: [
+            Container(
+              width: 10,
+              height: 10,
+              color: Colors.green,
+              margin: const EdgeInsets.symmetric(horizontal: 15),
+            ),
+            const Text('Hoàn thành'),
+            Container(
+              width: 10,
+              height: 10,
+              color: Colors.red,
+              margin: const EdgeInsets.symmetric(horizontal: 15),
+            ),
+            const Text('Chưa hoàn thành'),
+          ],
+        )
       ],
     );
   }
