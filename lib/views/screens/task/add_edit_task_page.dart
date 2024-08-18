@@ -441,7 +441,8 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
       startLastDate: DateTime.now().add(
         const Duration(days: 365 * 50),
       ),
-      endInitialDate: widget.task.endDate ?? DateTime.now(),
+      endInitialDate: widget.task.endDate ??
+          DateTime.now().copyWith(minute: DateTime.now().minute + 30),
       endFirstDate: DateTime(1600).subtract(const Duration(days: 3652)),
       endLastDate: DateTime.now().add(
         const Duration(days: 365 * 50),
